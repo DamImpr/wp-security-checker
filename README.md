@@ -1,4 +1,4 @@
-# wp-security-check
+# Wordpress Security Checker
 
 A single Bash script that checks one or more WordPress sites for signs of intrusion, using
 [WP-CLI](https://wp-cli.org/). It compares the current state of each site with a stored
