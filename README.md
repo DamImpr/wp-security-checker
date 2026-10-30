@@ -64,7 +64,7 @@ wp-security-check.sh <wordpress-path> --env <file> [--init]
 | `<wordpress-path>` | yes      | The folder that contains `wp-includes`. It is read **only** from this argument, never from the env file or the environment. |
 | `--env <file>`     | yes      | The env file to load (`--env=<file>` also works). There is no default: the script refuses to run without it. |
 | `--init`           | no       | (Re)create all baselines from the current state. Use **only** when you are sure the site is clean. |
-| `-h`, `--help`     | no       | Print the usage text. Works without `--env`. |
+| `-h`, `--help`     | no       | Print the usage text. |
 
 ### Examples
 
