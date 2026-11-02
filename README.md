@@ -113,7 +113,24 @@ TELEGRAM_CHAT_ID="123456789"
 | `TELEGRAM_CHAT_ID`   | empty   | ID of the chat, group or channel that receives the messages. |
 | `SEND_ALWAYS`        | `1`     | `1` = also send a short message when there are no ALERTs. `0` = send only when there is at least one ALERT. |
 | `WP_BIN`             | `wp`    | Path of the WP-CLI executable. |
+| `WP_EXECUTABLE_PATH` | `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin` | Colon-separated list of directories that is prepended to `PATH` by the script. Needed when the environment is reduced, for example in a crontab, where `wp`, `php` and the other tools may not be found. See below. |
 | `RECENT_MIN`         | `1500`  | Window, in minutes, for the "recently modified PHP files" check (1500 = 25 hours, see below). |
+
+**`WP_EXECUTABLE_PATH` and reduced environments.** Programs started by cron (and by other
+schedulers or services) get a minimal environment, usually with a very short `PATH` such as
+`/usr/bin:/bin`. In that case WP-CLI (`wp`), `php` or other tools may live in a directory that is not
+searched. After loading the env file, the script prepends `WP_EXECUTABLE_PATH` to `PATH`
+(`PATH="$WP_EXECUTABLE_PATH:$PATH"`), so the directories listed there are searched first and the
+original `PATH` is still kept as a fallback. Set it in the env file (or in the environment) to
+the directories that contain the executables you need, for example:
+
+```bash
+WP_EXECUTABLE_PATH="/usr/local/bin:/opt/php/bin:/home/siteuser/bin"
+```
+
+If you do not set it, the standard system directories shown in the table are used. If WP-CLI
+is installed somewhere else, either add its directory to `WP_EXECUTABLE_PATH` or set `WP_BIN` to its
+full path.
 
 **Why `RECENT_MIN` defaults to 1500 (25 hours).** The default is meant for a script run once a day from cron. The window must be **at least 24 hours**, otherwise files modified in the gap between two runs would never be reported (with a 20-hour window, a file changed 22 hours before the next run is missed by every run). The extra hour is a safety margin: cron does not start at the exact same second every day and a run takes some minutes, so a window of exactly 1440 minutes could still leave a small gap. The cost is that a file modified in the hour before the previous run can be reported twice; this check is only a NOTICE, so the noise is small. If you run the script at a different frequency, set `RECENT_MIN` in the env file to the interval between runs plus a small margin (for example `70` for an hourly run).
 
@@ -334,7 +351,9 @@ Details in the attached file.
 ## Running from cron
 
 Cron has a minimal environment, so use absolute paths. The script finds its own location, so
-the working directory does not matter.
+the working directory does not matter. Because `PATH` is also reduced under cron, set
+[`WP_EXECUTABLE_PATH`](#the-env-file) in the env file if `wp` or `php` are installed in a
+non-standard directory (or set `WP_BIN` to the full path of WP-CLI).
 
 Run as root (recommended: one crontab, many sites, WP-CLI automatically runs as each site owner):
 

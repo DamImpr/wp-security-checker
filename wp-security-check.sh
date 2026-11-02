@@ -58,6 +58,9 @@ done
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 
+WP_EXECUTABLE_PATH="${WP_EXECUTABLE_PATH:-/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin}"
+export PATH="$WP_EXECUTABLE_PATH:${PATH:-}"
+
 WP_BIN="${WP_BIN:-wp}"
 TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-}"
 TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID:-}"
