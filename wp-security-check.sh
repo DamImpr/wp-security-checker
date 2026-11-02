@@ -97,6 +97,11 @@ if [[ $EUID -ne 0 && "$(id -un)" != "$WP_USER" ]]; then
   echo "Error: the script must be run by root or by the site owner ($WP_USER), not by $(id -un)." >&2
   exit 2
 fi
+# When started as root, a user switch is needed: require runuser or sudo
+if [[ $EUID -eq 0 ]] && ! command -v runuser >/dev/null 2>&1 && ! command -v sudo >/dev/null 2>&1; then
+  echo "Error: neither runuser nor sudo found: cannot run wp as $WP_USER." >&2
+  exit 2
+fi
 
 # --- State (baselines and reports) ---------------------------------------------
 # Baselines and reports are centralized next to the script, one subfolder per site:

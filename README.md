@@ -400,6 +400,7 @@ All of these exit with code 2.
 | `Error: wp-cli not found (<WP_BIN>).` | Install WP-CLI or set `WP_BIN` in the env file. |
 | `Error: invalid site owner (root): wp commands must not be run as root.` | The files of the site belong to `root`. Change the owner to the real site user. |
 | `Error: the script must be run by root or by the site owner (<user>), not by <other>.` | Run it as root or as `<user>`. |
+| `Error: neither runuser nor sudo found: cannot run wp as <user>.` | The script was started as root but neither `runuser` nor `sudo` is available, so it cannot switch to the site owner. Install one of them, or make sure its directory is in `WP_EXECUTABLE_PATH`. |
 | `Error: no write permission on <dir> (user: <user>).` | The user running the script cannot write in `baselines_reports/`. Fix ownership or permissions. |
 | `Error: user <user> cannot run <WP_BIN>: ...` | The site owner cannot execute WP-CLI (path, permissions, PHP). The WP-CLI output is shown. |
 
